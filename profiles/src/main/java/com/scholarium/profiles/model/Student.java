@@ -17,11 +17,11 @@ import java.util.UUID;
 @Entity
 public class Student extends GenericUser{
 
-    boolean isRegular;
+    private boolean isRegular;
 
-    BigDecimal billing;
+    private BigDecimal billing;
 
-    DiscountEnum discount;
+    private DiscountEnum discount;
 
 
     public Student(CreateStudentDTO dto) {
