@@ -1,6 +1,8 @@
 package com.scholarium.profiles.controller;
 
-import com.scholarium.profiles.dto.CreateProfessorDTO;
+import com.scholarium.profiles.dto.professor.CreateProfessorDTO;
+import com.scholarium.profiles.dto.professor.EditProfessorDTO;
+import com.scholarium.profiles.dto.professor.ProfessorDTO;
 import com.scholarium.profiles.model.Professor;
 import com.scholarium.profiles.service.ProfessorService;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,7 @@ public class ProfessorController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdAndDeletedFalse(@PathVariable Long id){
+    public ResponseEntity<ProfessorDTO> findByIdAndDeletedFalse(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.FOUND).body(professorService.findById(id));
     }
 
@@ -29,9 +31,17 @@ public class ProfessorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id){
+    public ResponseEntity<HttpStatus> deleteById(@PathVariable Long id){
         professorService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deleted");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<HttpStatus> updateAddressById(@PathVariable Long id, @RequestBody EditProfessorDTO dto){
+
+        professorService.changeAddress(id,dto);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
 

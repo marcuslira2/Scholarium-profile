@@ -1,4 +1,4 @@
-package com.scholarium.profiles.dto;
+package com.scholarium.profiles.dto.professor;
 
 import jakarta.validation.constraints.NotBlank;
 

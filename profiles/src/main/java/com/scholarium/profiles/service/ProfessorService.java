@@ -1,10 +1,10 @@
 package com.scholarium.profiles.service;
 
-import com.scholarium.profiles.dto.CreateProfessorDTO;
+import com.scholarium.profiles.dto.professor.CreateProfessorDTO;
+import com.scholarium.profiles.dto.professor.EditProfessorDTO;
+import com.scholarium.profiles.dto.professor.ProfessorDTO;
 import com.scholarium.profiles.model.Professor;
 import com.scholarium.profiles.repository.ProfessorRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -18,8 +18,9 @@ public class ProfessorService {
         this.professorRepository = professorRepository;
     }
 
-    public Professor findById(Long id){
-        return professorRepository.findByIdAndDeletedFalse(id).orElseThrow(()-> new NoSuchElementException("Professor not found."));
+    public ProfessorDTO findById(Long id){
+        Professor professor = professorRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new NoSuchElementException("Professor not found."));
+        return convertToDTO(professor);
     }
 
     public Professor create(CreateProfessorDTO dto){
@@ -27,9 +28,24 @@ public class ProfessorService {
     }
 
     public void deleteById(Long id){
-        Professor professor = findById(id);
+        Professor professor = professorRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new NoSuchElementException("Professor not found."));
 
         professor.setDeleted(true);
+
+        professorRepository.save(professor);
+    }
+
+    public ProfessorDTO convertToDTO (Professor professor){
+        return new ProfessorDTO(
+                professor.getId(),
+                professor.getName(),
+                professor.getCpf()
+        );
+    }
+
+    public void changeAddress(Long id, EditProfessorDTO dto){
+        Professor professor = professorRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new NoSuchElementException("Professor not found."));
+        professor.setAddress(dto.address());
 
         professorRepository.save(professor);
     }
